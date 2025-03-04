@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.arianit</groupId>
+    <artifactId>book-rental-quarkus</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Book Rental Quarkus :: R00T</name>
+    <properties>
+        <assembly-plugin.version>3.3.0</assembly-plugin.version>
+    </properties>
+    <modules>
+        <module>book</module>
+    </modules>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${assembly-plugin.version}</version>
+                <configuration>
+                    <finalName>book-rental-quarkus</finalName>
+                    <appendAssemblyId>true</appendAssemblyId>
+                    <runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
+                    <attach>false</attach>
+                    <descriptors>
+                        <descriptor>assembly.xml</descriptor>
+                        <descriptor>assembly-complete.xml</descriptor>
+                    </descriptors>
+                    <outputDirectory>dist</outputDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>complete</id>
+            <modules>
+                <module>book</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>full</id>
+            <modules>
+                <module>docs</module>
+            </modules>
+        </profile>
+    </profiles>
+</project>
