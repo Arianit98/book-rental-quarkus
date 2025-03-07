@@ -30,6 +30,9 @@ public class BookService {
 
     public Book updateBook(@Valid Book book) {
         Book entity = Book.findById(book.id);
+        if (entity == null) {
+            return null;
+        }
         entity.title = book.title;
         entity.author = book.author;
         entity.year = book.year;

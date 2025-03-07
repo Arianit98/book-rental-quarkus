@@ -51,6 +51,9 @@ public class BookResource {
     @Produces(MediaType.APPLICATION_JSON)
     public RestResponse<Book> updateBook(@Valid Book book) {
         book = service.updateBook(book);
+        if (book == null) {
+            return RestResponse.noContent();
+        }
         return RestResponse.ok(book);
     }
 
