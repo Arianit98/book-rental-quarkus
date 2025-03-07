@@ -32,7 +32,7 @@ public class BookResource {
     public RestResponse<Book> getBookById(@RestPath Long id) {
         Book book = service.findBookById(id);
         if (book == null) {
-            return RestResponse.noContent();
+            return RestResponse.notFound();
         }
         return RestResponse.ok(book);
     }
@@ -52,7 +52,7 @@ public class BookResource {
     public RestResponse<Book> updateBook(@Valid Book book) {
         book = service.updateBook(book);
         if (book == null) {
-            return RestResponse.noContent();
+            return RestResponse.notFound();
         }
         return RestResponse.ok(book);
     }

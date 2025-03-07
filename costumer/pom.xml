@@ -7,7 +7,7 @@
         <artifactId>book-rental-quarkus</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>book</artifactId>
+    <artifactId>costumer</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
