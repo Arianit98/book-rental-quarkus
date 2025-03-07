@@ -14,6 +14,7 @@
     <modules>
         <module>book</module>
         <module>costumer</module>
+        <module>reservation</module>
     </modules>
 
     <build>
