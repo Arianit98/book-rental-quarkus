@@ -1,0 +1,9 @@
+INSERT INTO books (id, title, author, reservedNr, stockNr, year) VALUES (nextval('books_seq'),'Book Title 2', 'Author Name 2', 0, 5, 2021);
+INSERT INTO books (id, title, author, reservedNr, stockNr, year) VALUES (nextval('books_seq'),'Book Title 3', 'Author Name 3', 0, 5, 2021);
+INSERT INTO books (id, title, author, reservedNr, stockNr, year) VALUES (nextval('books_seq'),'Book Title 4', 'Author Name 4', 0, 5, 2021);
+INSERT INTO books (id, title, author, reservedNr, stockNr, year) VALUES (nextval('books_seq'),'Book Title 5', 'Author Name 5', 0, 5, 2021);
+INSERT INTO books (id, title, author, reservedNr, stockNr, year) VALUES (nextval('books_seq'),'Book Title 6', 'Author Name 6', 0, 5, 2021);
+INSERT INTO books (id, title, author, reservedNr, stockNr, year) VALUES (nextval('books_seq'),'Book Title 7', 'Author Name 7', 0, 5, 2021);
+INSERT INTO books (id, title, author, reservedNr, stockNr, year) VALUES (nextval('books_seq'),'Book Title 8', 'Author Name 8', 0, 5, 2021);
+INSERT INTO books (id, title, author, reservedNr, stockNr, year) VALUES (nextval('books_seq'),'Book Title 9', 'Author Name 9', 0, 5, 2021);
+INSERT INTO books (id, title, author, reservedNr, stockNr, year) VALUES (nextval('books_seq'),'Book Title 10', 'Author Name 10', 0, 5, 2021);

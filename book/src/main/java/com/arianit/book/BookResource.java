@@ -63,4 +63,12 @@ public class BookResource {
         service.deleteBook(id);
         return RestResponse.noContent();
     }
+
+    @GET
+    @Path("/{id}/checkAvailability")
+    @Produces(MediaType.APPLICATION_JSON)
+    public RestResponse<Boolean> checkAvailability(@RestPath Long id) {
+        boolean isAvailable = service.checkAvailability(id);
+        return RestResponse.ok(isAvailable);
+    }
 }

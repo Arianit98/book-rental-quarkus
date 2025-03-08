@@ -15,5 +15,5 @@ public interface CostumerClient {
 
     @GET
     @Path("/{id}")
-    RestResponse<?> getCostumer(@RestPath("id") Long id);
+    RestResponse<Costumer> getCostumer(@RestPath Long id);
 }

@@ -1,0 +1,10 @@
+INSERT INTO costumers (id, name, email, phone, address, age) VALUES (nextval('costumers_seq'),'Costumer Name 1', 'Costumer Email 1', 'Costumer Phone 1', 'Costumer Address 1', 20);
+INSERT INTO costumers (id, name, email, phone, address, age) VALUES (nextval('costumers_seq'),'Costumer Name 2', 'Costumer Email 2', 'Costumer Phone 2', 'Costumer Address 2', 20);
+INSERT INTO costumers (id, name, email, phone, address, age) VALUES (nextval('costumers_seq'),'Costumer Name 3', 'Costumer Email 3', 'Costumer Phone 3', 'Costumer Address 3', 20);
+INSERT INTO costumers (id, name, email, phone, address, age) VALUES (nextval('costumers_seq'),'Costumer Name 4', 'Costumer Email 4', 'Costumer Phone 4', 'Costumer Address 4', 20);
+INSERT INTO costumers (id, name, email, phone, address, age) VALUES (nextval('costumers_seq'),'Costumer Name 5', 'Costumer Email 5', 'Costumer Phone 5', 'Costumer Address 5', 20);
+INSERT INTO costumers (id, name, email, phone, address, age) VALUES (nextval('costumers_seq'),'Costumer Name 6', 'Costumer Email 6', 'Costumer Phone 6', 'Costumer Address 6', 20);
+INSERT INTO costumers (id, name, email, phone, address, age) VALUES (nextval('costumers_seq'),'Costumer Name 7', 'Costumer Email 7', 'Costumer Phone 7', 'Costumer Address 7', 20);
+INSERT INTO costumers (id, name, email, phone, address, age) VALUES (nextval('costumers_seq'),'Costumer Name 8', 'Costumer Email 8', 'Costumer Phone 8', 'Costumer Address 8', 20);
+INSERT INTO costumers (id, name, email, phone, address, age) VALUES (nextval('costumers_seq'),'Costumer Name 9', 'Costumer Email 9', 'Costumer Phone 9', 'Costumer Address 9', 20);
+INSERT INTO costumers (id, name, email, phone, address, age) VALUES (nextval('costumers_seq'),'Costumer Name 10', 'Costumer Email 10', 'Costumer Phone 10', 'Costumer Address 10', 20);

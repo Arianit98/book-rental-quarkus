@@ -44,4 +44,12 @@ public class BookService {
     public void deleteBook(Long id) {
         Book.deleteById(id);
     }
+
+    public boolean checkAvailability(Long id) {
+        Book book = findBookById(id);
+        if (book == null) {
+            return false;
+        }
+        return book.stockNr > book.reservedNr;
+    }
 }
