@@ -2,6 +2,7 @@ package com.arianit.reservation;
 
 import com.arianit.reservation.client.Book;
 import com.arianit.reservation.client.BookClient;
+import com.arianit.reservation.client.Costumer;
 import com.arianit.reservation.client.CostumerClient;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
@@ -93,7 +94,11 @@ public class ReservationService {
     }
 
     public boolean costumerExists(Long costumerId) {
-        RestResponse<?> customerResponse = costumerClient.getCostumer(costumerId);
-        return customerResponse.getStatus() == 200;
+        try {
+            RestResponse<Costumer> customerResponse = costumerClient.getCostumer(costumerId);
+            return customerResponse.getStatus() == 200;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
