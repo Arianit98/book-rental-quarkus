@@ -67,6 +67,9 @@ public class ReservationService {
 
     public void deleteReservation(Long id) {
         Reservation entity = findReservationById(id);
+        if (entity == null) {
+            return;
+        }
         Reservation.deleteById(id);
         decreaseBookReservedNr(entity.bookId);
     }
