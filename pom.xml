@@ -37,19 +37,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>complete</id>
-            <modules>
-                <module>book</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>full</id>
-            <modules>
-                <module>docs</module>
-            </modules>
-        </profile>
-    </profiles>
 </project>
