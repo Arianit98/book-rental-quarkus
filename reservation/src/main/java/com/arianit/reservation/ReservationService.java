@@ -6,7 +6,6 @@ import com.arianit.reservation.client.Costumer;
 import com.arianit.reservation.client.CostumerClient;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.RestResponse;
 
@@ -35,7 +34,7 @@ public class ReservationService {
         return Reservation.findById(id);
     }
 
-    public Reservation persistReservation(@Valid Reservation reservation) {
+    public Reservation persistReservation(Reservation reservation) {
         if (!costumerExists(reservation.costumerId))
             return null;
         if (!isBookAvailable(reservation.bookId))
@@ -45,7 +44,7 @@ public class ReservationService {
         return reservation;
     }
 
-    public Reservation updateReservation(@Valid Reservation reservation) {
+    public Reservation updateReservation(Reservation reservation) {
         if (!costumerExists(reservation.costumerId))
             return null;
         if (!isBookAvailable(reservation.bookId))

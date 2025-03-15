@@ -1,7 +1,6 @@
 package com.arianit.costumer;
 
 import jakarta.inject.Inject;
-import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.UriBuilder;
@@ -36,7 +35,7 @@ public class CostumerResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public RestResponse<Costumer> createCostumer(@Valid Costumer costumer) {
+    public RestResponse<Costumer> createCostumer(Costumer costumer) {
         costumer = service.persistCostumer(costumer);
         UriBuilder uriBuilder = UriBuilder.fromResource(CostumerResource.class).path(Long.toString(costumer.id));
         return RestResponse.created(uriBuilder.build());
@@ -45,7 +44,7 @@ public class CostumerResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public RestResponse<Costumer> updateCostumer(@Valid Costumer costumer) {
+    public RestResponse<Costumer> updateCostumer(Costumer costumer) {
         costumer = service.updateCostumer(costumer);
         if (costumer == null) {
             return RestResponse.notFound();

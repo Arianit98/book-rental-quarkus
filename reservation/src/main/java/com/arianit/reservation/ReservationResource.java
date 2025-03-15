@@ -1,7 +1,6 @@
 package com.arianit.reservation;
 
 import jakarta.inject.Inject;
-import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.UriBuilder;
@@ -40,7 +39,7 @@ public class ReservationResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public RestResponse<Reservation> createReservation(@Valid Reservation reservation) {
+    public RestResponse<Reservation> createReservation(Reservation reservation) {
         reservation = service.persistReservation(reservation);
         if (reservation == null) {
             return RestResponse.status(400,"Costumer not found or book is not available");
@@ -52,7 +51,7 @@ public class ReservationResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public RestResponse<Reservation> updateReservation(@Valid Reservation reservation) {
+    public RestResponse<Reservation> updateReservation(Reservation reservation) {
         reservation = service.updateReservation(reservation);
         if (reservation == null) {
             return RestResponse.status(400,"Reservation not found or costumer/book is not available");

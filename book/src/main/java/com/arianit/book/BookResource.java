@@ -1,7 +1,6 @@
 package com.arianit.book;
 
 import jakarta.inject.Inject;
-import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.UriBuilder;
@@ -40,7 +39,7 @@ public class BookResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public RestResponse<Book> createBook(@Valid Book book) {
+    public RestResponse<Book> createBook(Book book) {
         book = service.persistBook(book);
         UriBuilder uriBuilder = UriBuilder.fromResource(BookResource.class).path(Long.toString(book.id));
         return RestResponse.created(uriBuilder.build());
@@ -49,7 +48,7 @@ public class BookResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public RestResponse<Book> updateBook(@Valid Book book) {
+    public RestResponse<Book> updateBook(Book book) {
         book = service.updateBook(book);
         if (book == null) {
             return RestResponse.notFound();

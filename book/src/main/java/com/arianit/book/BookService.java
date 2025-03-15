@@ -2,7 +2,6 @@ package com.arianit.book;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -23,12 +22,12 @@ public class BookService {
         return Book.findById(id);
     }
 
-    public Book persistBook(@Valid Book book) {
+    public Book persistBook(Book book) {
         book.persist();
         return book;
     }
 
-    public Book updateBook(@Valid Book book) {
+    public Book updateBook(Book book) {
         Book entity = Book.findById(book.id);
         if (entity == null) {
             return null;

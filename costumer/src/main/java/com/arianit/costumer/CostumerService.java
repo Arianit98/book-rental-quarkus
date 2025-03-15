@@ -2,7 +2,6 @@ package com.arianit.costumer;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -23,12 +22,12 @@ public class CostumerService {
         return Costumer.findById(id);
     }
 
-    public Costumer persistCostumer(@Valid Costumer costumer) {
+    public Costumer persistCostumer(Costumer costumer) {
         costumer.persist();
         return costumer;
     }
 
-    public Costumer updateCostumer(@Valid Costumer costumer) {
+    public Costumer updateCostumer(Costumer costumer) {
         Costumer entity = Costumer.findById(costumer.id);
         if (entity == null) {
             return null;
