@@ -1,35 +1,40 @@
 package com.arianit.reservation;
 
-import com.arianit.reservation.client.Book;
-import com.arianit.reservation.client.BookClient;
-import com.arianit.reservation.client.CostumerClient;
-import io.quarkus.test.InjectMock;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import io.quarkiverse.wiremock.devservice.ConnectWireMock;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.mockito.MockitoConfig;
-import jakarta.inject.Inject;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.jboss.resteasy.reactive.RestResponse;
 import org.junit.jupiter.api.*;
-import org.mockito.Mockito;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static io.restassured.RestAssured.*;
-import static org.hamcrest.CoreMatchers.*;
 
 @QuarkusTest
+@ConnectWireMock
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ReservationResourceTest {
 
     private static Integer reservationId;
+    private static WireMockServer bookServiceMock;
+    private static WireMockServer costumerServiceMock;
 
-    @InjectMock
-    @RestClient
-    @MockitoConfig(convertScopes = true)
-    BookClient bookClient;
+    @BeforeAll
+    static void setup() {
+        bookServiceMock = new WireMockServer(WireMockConfiguration.wireMockConfig().dynamicPort());
+        costumerServiceMock = new WireMockServer(WireMockConfiguration.wireMockConfig().dynamicPort());
+        bookServiceMock.start();
+        costumerServiceMock.start();
 
-    @InjectMock
-    @RestClient
-    @MockitoConfig(convertScopes = true)
-    CostumerClient costumerClient;
+        System.setProperty("quarkus.rest-client.book-api.url", "http://localhost:" + bookServiceMock.port());
+        System.setProperty("quarkus.rest-client.costumer-api.url", "http://localhost:" + costumerServiceMock.port());
+    }
+
+    @AfterAll
+    static void tearDown() {
+        bookServiceMock.stop();
+        costumerServiceMock.stop();
+    }
 
     @Test
     @DisplayName("Get all reservations")
@@ -46,12 +51,31 @@ class ReservationResourceTest {
     @DisplayName("Create new reservation")
     @Order(1)
     void createReservation() {
-        Book book = new Book();
-        book.setId(1L);
-        book.setReservedNr(0);
-        Mockito.when(bookClient.getBookById(1L)).thenReturn(RestResponse.ok(book));
-        Mockito.when(costumerClient.getCostumer(1L)).thenReturn(RestResponse.ok());
-        Mockito.when(bookClient.checkAvailability(1L)).thenReturn(RestResponse.ok(true));
+
+        costumerServiceMock.stubFor(get("/api/v1/costumers/1")
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"id\": 1, \"name\": \"John Doe\", \"email\": \" \"}")));
+
+        bookServiceMock.stubFor(get("/api/v1/books/1/checkAvailability")
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("true")
+                ));
+
+        bookServiceMock.stubFor(get("/api/v1/books/1")
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"id\": 1, \"title\": \"Libri Titull\", \"author\": \"test author\", \"year\": 2011, \"stockNr\": 10, \"reservedNr\": 0}")));
+
+        bookServiceMock.stubFor(put("/api/v1/books")
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"id\": 1, \"title\": \"Libri Titull\", \"author\": \"test author\", \"year\": 2011, \"stockNr\": 10, \"reservedNr\": 1}")));
 
         reservationId = Integer.valueOf(given()
                 .contentType("application/json")
@@ -78,14 +102,36 @@ class ReservationResourceTest {
     @DisplayName("Update reservation")
     @Order(3)
     void updateReservation() {
-        Book book = new Book();
-        book.setId(1L);
-        book.setReservedNr(0);
-        Mockito.when(bookClient.getBookById(1L)).thenReturn(RestResponse.ok(book));
-        Mockito.when(costumerClient.getCostumer(1L)).thenReturn(RestResponse.ok());
-        Mockito.when(bookClient.checkAvailability(1L)).thenReturn(RestResponse.ok(true));
+        costumerServiceMock.stubFor(get("/api/v1/costumers/1")
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"id\": 1, \"name\": \"John Doe\", \"email\": \" \"}")
+                ));
+
+        bookServiceMock.stubFor(get("/api/v1/books/1/checkAvailability")
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("true")
+                ));
+
+        bookServiceMock.stubFor(get("/api/v1/books/1")
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"id\": 1, \"title\": \"Book Title\", \"author\": \"Author Name\", \"reservedNr\": 0, \"stockNr\": 1, \"year\": 2021}")
+                ));
+
+        bookServiceMock.stubFor(put("/api/v1/books")
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"id\": 1, \"title\": \"Book Title\", \"author\": \"Author Name\", \"reservedNr\": 1, \"stockNr\": 1, \"year\": 2021}")
+                ));
 
         String bodyStr = String.format("{\"id\": %d, \"costumerId\": 1, \"bookId\": 1, \"durationInDays\": 7, \"createdDate\": \"2021-10-01\"}", reservationId);
+
         given()
                 .contentType("application/json")
                 .body(bodyStr)
@@ -99,11 +145,20 @@ class ReservationResourceTest {
     @DisplayName("Delete reservation")
     @Order(4)
     void deleteReservation() {
-        Book book = new Book();
-        book.setId(1L);
-        book.setReservedNr(0);
-        Mockito.when(bookClient.getBookById(1L)).thenReturn(RestResponse.ok(book));
-        Mockito.when(bookClient.updateBook(book)).thenReturn(RestResponse.ok(book));
+        bookServiceMock.stubFor(get("/api/v1/books/1")
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"id\": 1, \"title\": \"Book Title\", \"author\": \"Author Name\", \"reservedNr\": 1, \"stockNr\": 1, \"year\": 2021}")
+                ));
+
+        bookServiceMock.stubFor(put("/api/v1/books")
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"id\": 1, \"title\": \"Book Title\", \"author\": \"Author Name\", \"reservedNr\": 0, \"stockNr\": 1, \"year\": 2021}")
+                ));
+
         when()
                 .delete("api/v1/reservations/" + reservationId)
                 .then()
@@ -114,10 +169,21 @@ class ReservationResourceTest {
     @DisplayName("Create new reservation with invalid customer")
     @Order(5)
     void createReservationWithInvalidCustomer() {
-        Mockito.when(costumerClient.getCostumer(1L)).thenReturn(RestResponse.notFound());
+        costumerServiceMock.stubFor(get("/api/v1/costumers/100")
+                .willReturn(aResponse()
+                        .withStatus(404)
+                ));
+
+        bookServiceMock.stubFor(get("/api/v1/books/1/checkAvailability")
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("true")
+                ));
+
         given()
                 .contentType("application/json")
-                .body("{\"costumerId\": 1, \"bookId\": 1, \"durationInDays\": 7, \"createdDate\": \"2021-10-01\"}")
+                .body("{\"costumerId\": 100, \"bookId\": 1, \"durationInDays\": 7, \"createdDate\": \"2021-10-01\"}")
                 .when()
                 .post("api/v1/reservations")
                 .then()
@@ -128,11 +194,21 @@ class ReservationResourceTest {
     @DisplayName("Create new reservation with invalid book")
     @Order(6)
     void createReservationWithInvalidBook() {
-        Mockito.when(costumerClient.getCostumer(1L)).thenReturn(RestResponse.ok());
-        Mockito.when(bookClient.checkAvailability(1L)).thenReturn(RestResponse.ok(false));
+        costumerServiceMock.stubFor(get("/api/v1/costumers/1")
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"id\": 1, \"name\": \"John Doe\", \"email\": \" \"}")
+                ));
+
+        bookServiceMock.stubFor(get("/api/v1/books/100/checkAvailability")
+                .willReturn(aResponse()
+                        .withStatus(204)
+                ));
+
         given()
                 .contentType("application/json")
-                .body("{\"costumerId\": 1, \"bookId\": 1, \"durationInDays\": 7, \"createdDate\": \"2021-10-01\"}")
+                .body("{\"costumerId\": 1, \"bookId\": 100, \"durationInDays\": 7, \"createdDate\": \"2021-10-01\"}")
                 .when()
                 .post("api/v1/reservations")
                 .then()
@@ -178,11 +254,19 @@ class ReservationResourceTest {
     @DisplayName("Create new reservation with invalid book and customer")
     @Order(10)
     void createReservationWithInvalidBookAndCustomer() {
-        Mockito.when(costumerClient.getCostumer(1L)).thenReturn(RestResponse.notFound());
-        Mockito.when(bookClient.getBookById(1L)).thenReturn(RestResponse.noContent());
+        costumerServiceMock.stubFor(get("/api/v1/costumers/100")
+                .willReturn(aResponse()
+                        .withStatus(404)
+                ));
+
+        bookServiceMock.stubFor(get("/api/v1/books/100/checkAvailability")
+                .willReturn(aResponse()
+                        .withStatus(204)
+                ));
+
         given()
                 .contentType("application/json")
-                .body("{\"costumerId\": 1, \"bookId\": 1, \"durationInDays\": 7, \"createdDate\": \"2021-10-01\"}")
+                .body("{\"costumerId\": 100, \"bookId\": 100}")
                 .when()
                 .post("api/v1/reservations")
                 .then()
