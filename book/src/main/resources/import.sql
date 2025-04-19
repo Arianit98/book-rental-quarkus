@@ -1,3 +1,4 @@
+INSERT INTO books (title, author, reservedNr, stockNr, year) VALUES ('Book Title 1', 'Author Name 1', 0, 5, 2021);
 INSERT INTO books (title, author, reservedNr, stockNr, year) VALUES ('Book Title 2', 'Author Name 2', 0, 5, 2021);
 INSERT INTO books (title, author, reservedNr, stockNr, year) VALUES ('Book Title 3', 'Author Name 3', 0, 5, 2021);
 INSERT INTO books (title, author, reservedNr, stockNr, year) VALUES ('Book Title 4', 'Author Name 4', 0, 5, 2021);
