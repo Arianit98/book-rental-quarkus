@@ -2,9 +2,7 @@ package com.arianit.book;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.UriBuilder;
-import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.RestPath;
 import org.jboss.resteasy.reactive.RestResponse;
 
@@ -14,20 +12,16 @@ import java.util.List;
 public class BookResource {
 
     @Inject
-    Logger logger;
-
-    @Inject
     BookService service;
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public RestResponse<List<Book>> getBooks() {
-        return RestResponse.ok(service.findAllBooks());
+        List<Book> books = service.findAllBooks();
+        return RestResponse.ok(books);
     }
 
     @GET
     @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
     public RestResponse<Book> getBookById(@RestPath Long id) {
         Book book = service.findBookById(id);
         if (book == null) {
@@ -37,8 +31,6 @@ public class BookResource {
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public RestResponse<Book> createBook(Book book) {
         book = service.persistBook(book);
         UriBuilder uriBuilder = UriBuilder.fromResource(BookResource.class).path(Long.toString(book.id));
@@ -46,8 +38,6 @@ public class BookResource {
     }
 
     @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public RestResponse<Book> updateBook(Book book) {
         book = service.updateBook(book);
         if (book == null) {
@@ -65,7 +55,6 @@ public class BookResource {
 
     @GET
     @Path("/{id}/checkAvailability")
-    @Produces(MediaType.APPLICATION_JSON)
     public RestResponse<Boolean> checkAvailability(@RestPath Long id) {
         boolean isAvailable = service.checkAvailability(id);
         return RestResponse.ok(isAvailable);
