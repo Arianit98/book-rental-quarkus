@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -jar costumer/target/reservation-1.0.0-SNAPSHOT-runner
+web: costumer/target/costumer-1.0.0-SNAPSHOT-runner
