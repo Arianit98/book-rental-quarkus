@@ -1,0 +1,35 @@
+# The following Dockerfile is used to build a native executable that is optimized to run on Heroku.
+# It uses the Mandrel builder image to compile the application and then packages it into a minimal
+# runtime image.
+# Since this project is using multiple modules, the docker file needs to be run from the root of the project(book-rental-quarkus).
+
+## Stage 1 : build with maven builder image with native capabilities
+FROM --platform=linux/amd64 quay.io/quarkus/ubi9-quarkus-mandrel-builder-image:jdk-21 AS build
+COPY --chown=quarkus:quarkus pom.xml /code/
+COPY --chown=quarkus:quarkus parse_db_url_heroku.sh /code/
+COPY --chown=quarkus:quarkus --chmod=0755 reservation/mvnw /code/reservation/mvnw
+COPY --chown=quarkus:quarkus reservation/.mvn /code/reservation/.mvn
+COPY --chown=quarkus:quarkus reservation/pom.xml /code/reservation/
+USER quarkus
+WORKDIR /code/reservation
+RUN ./mvnw -B org.apache.maven.plugins:maven-dependency-plugin:3.8.1:go-offline
+COPY reservation/src /code/reservation/src
+RUN ./mvnw package -DskipTests=true -Dnative
+
+## Stage 2 : create the docker final image
+FROM --platform=linux/amd64 quay.io/quarkus/ubi9-quarkus-micro-image:2.0
+WORKDIR /work/
+COPY --from=build /code/reservation/target/*-runner /work/application
+COPY --from=build /code/parse_db_url_heroku.sh /work/parse_db_url_heroku.sh
+
+# set up permissions for user `1001`
+RUN chmod 775 /work /work/application \
+  && chmod 755 /work/parse_db_url_heroku.sh \
+  && chown -R 1001 /work \
+  && chmod -R "g+rwX" /work \
+  && chown -R 1001:root /work
+
+EXPOSE 8080
+USER 1001
+
+CMD ["/bin/bash", "-c", ". ./parse_db_url_heroku.sh && ./application", "-Dquarkus.http.host=0.0.0.0"]
