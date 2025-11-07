@@ -9,6 +9,7 @@
 
     <properties>
         <assembly-plugin.version>3.3.0</assembly-plugin.version>
+        <quarkus.platform.version>3.27.0</quarkus.platform.version>
     </properties>
 
     <modules>
